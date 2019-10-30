@@ -33,18 +33,22 @@ void Report_generate::generatePdf(QString directory)
             html+="<div align=left>""<b>""Действуюущее лицо:</b> "+jsvalue.toObject().value("active_face").toString()+"</div>";
             html+="<div align=left>""<b>""Цель:</b> "+jsvalue.toObject().value("goal").toString()+"</div>";
             html+="<div align=left>""<b>""Предусловие:</b> "+jsvalue.toObject().value("uslovie").toString()+"</div>";
+            html+="<div align=left>""<img src="+directory+"/robustness/"+str+".png alt='отсутствует диаграмма для "+str+
+                    "' width=650 height=400 > ""</div>";
             int index_seq=0;
             for (;index_seq<keys.count()-3;index_seq++)
             {
+                QString name;
                 QJsonValue seq_list=jsvalue.toObject().value("list_seq"+QString::number(index_seq));
                 if (seq_list.toObject().value("type_seq").toString()=="main")
                 {
                     html+="<div align=left>""<b>""Главная последовательность:</b> ";
+                    name="_main";
                 }
                 else if (seq_list.toObject().value("type_seq").toString()=="alt")
                 {
                     html+="<div align=left>""<b>""Альтернативная последовательность</b> ( "+seq_list.toObject().value("usl_seq").toString()+"):";
-
+                    name="_alt"+QString::number(index_seq);
                 }
                 html+="<div align=left>""<ol>";
                 int index_elem=0;
@@ -57,7 +61,8 @@ void Report_generate::generatePdf(QString directory)
                         html+="<li>"+elem_seq.toString()+"</li>";
                     }
                 }
-                html+="</ol>""</div>""</div>";
+                html+="</ol>""</div>""<img src='"+directory+"/sequence/"+str+name+".png' alt='отсутствует диаграмма для "+str+name+
+                        "' width=650 height=400>""</div>";
             }
         }
     }
