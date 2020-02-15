@@ -72,7 +72,7 @@ void Report_generate::generatePdf(QString directory)
     QPrinter printer(QPrinter::PrinterResolution);
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setPaperSize(QPrinter::A4);
-    printer.setOutputFileName(directory+"/UML.pdf");
+    printer.setOutputFileName(directory+"/"+directory.split('/').last()+".pdf");
     printer.setPageMargins(QMarginsF(15, 15, 15, 15));
     document.print(&printer);
     QMessageBox complete(QMessageBox::Information,"Успешно",
