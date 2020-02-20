@@ -8,7 +8,7 @@
 #include <QVector>
 #include <QMessageBox>
 
-void Report_generate::generatePdf(QString directory)
+void generatePdf(QString directory)
 {
     QString html;
     QFile json(directory+"//description.json");

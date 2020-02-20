@@ -3,10 +3,8 @@
 
 #include "report_generate_global.h"
 
-class REPORT_GENERATE_EXPORT Report_generate
-{
-public:
-    static void generatePdf(QString directory);
+extern "C" {
+    Q_DECL_EXPORT void generatePdf(QString directory);
 };
 
 #endif // REPORT_GENERATE_H
