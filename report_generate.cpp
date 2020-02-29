@@ -23,6 +23,7 @@ void generatePdf(QString directory)
         return;
     }
     QJsonObject root = doc.object();
+    html+="<h1 align=center>"+directory.split('/').last()+"</h1>";
     foreach(QString str,root.keys())
     {
         html+="<div align=left>""<b>""Название прецедента:</b> "+str+"</div>";
@@ -34,7 +35,7 @@ void generatePdf(QString directory)
             html+="<div align=left>""<b>""Цель:</b> "+jsvalue.toObject().value("goal").toString()+"</div>";
             html+="<div align=left>""<b>""Предусловие:</b> "+jsvalue.toObject().value("uslovie").toString()+"</div>";
             html+="<div align=left>""<img src="+directory+"/robustness/"+str+".png alt='отсутствует диаграмма для "+str+
-                    "' width=650 height=400 > ""</div>";
+                    "' width=650  > ""</div>";
             int index_seq=0;
             for (;index_seq<keys.count()-3;index_seq++)
             {
@@ -62,11 +63,13 @@ void generatePdf(QString directory)
                     }
                 }
                 html+="</ol>""</div>""<img src='"+directory+"/sequence/"+str+name+".png' alt='отсутствует диаграмма для "+str+name+
-                        "' width=650 height=400>""</div>";
+                        "' width=650 >""</div>";
             }
         }
     }
     json.close();
+    html+="<h2 align=center>Диаграмма классов</h2>";
+    html+="<div align=left><img src='"+directory+"/classes/classes.png'></div>";
     QTextDocument document;
     document.setHtml(html);
     QPrinter printer(QPrinter::PrinterResolution);
