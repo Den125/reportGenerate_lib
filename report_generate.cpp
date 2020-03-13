@@ -7,6 +7,7 @@
 #include <QtPrintSupport/QPrinter>
 #include <QVector>
 #include <QMessageBox>
+#include <QDebug>
 
 void generatePdf(QString directory)
 {
@@ -31,11 +32,14 @@ void generatePdf(QString directory)
         QStringList keys=jsvalue.toObject().keys();
         if (!keys.empty())
         {
+            QSizeF picture_size;
             html+="<div align=left>""<b>""Действуюущее лицо:</b> "+jsvalue.toObject().value("active_face").toString()+"</div>";
             html+="<div align=left>""<b>""Цель:</b> "+jsvalue.toObject().value("goal").toString()+"</div>";
             html+="<div align=left>""<b>""Предусловие:</b> "+jsvalue.toObject().value("uslovie").toString()+"</div>";
+            picture_size=get_image_size(directory+"/robustness/"+str+".png");
             html+="<div align=left>""<img src="+directory+"/robustness/"+str+".png alt='отсутствует диаграмма для "+str+
-                    "' width=650  > ""</div>";
+                    "'width="+QString::number(picture_size.width())+
+                    " height="+QString::number(picture_size.height())+">""</div>";
             int index_seq=0;
             for (;index_seq<keys.count()-3;index_seq++)
             {
@@ -62,8 +66,10 @@ void generatePdf(QString directory)
                         html+="<li>"+elem_seq.toString()+"</li>";
                     }
                 }
-                html+="</ol>""</div>""<img src='"+directory+"/sequence/"+str+name+".png' alt='отсутствует диаграмма для "+str+name+
-                        "' width=650 >""</div>";
+                picture_size=get_image_size(directory+"/sequence/"+str+name+".png");
+                html+="</ol>""</div>""<br>""<img src='"+directory+"/sequence/"+str+name+".png' alt='отсутствует диаграмма для "+str+name+
+                        "' width="+QString::number(picture_size.width())+
+                        " height="+QString::number(picture_size.height())+">""</div>";
             }
         }
     }
@@ -81,4 +87,24 @@ void generatePdf(QString directory)
     QMessageBox complete(QMessageBox::Information,"Успешно",
                       "Файл успешно создан. Вы можете найти его в директории своего проекта");
     complete.exec();
+}
+
+QSizeF get_image_size(QString picture_path)
+{
+    QPixmap picture (picture_path);
+    QSizeF size(picture.width(),picture.height());\
+    if (size.width()/297==1.0 && size.height()/420==1.0)
+    {
+    }
+    else if (size.width()/297<1 || size.height()/420<1)
+    {
+        size.setWidth(size.width() * std::min(size.width()/297,size.height()/420));
+        size.setHeight(size.height() * std::min(size.width()/297,size.height()/420));
+    }
+    else if (size.width()/297>1 || size.height()/420>1)
+    {
+        size.setWidth(size.width() / std::min(size.width()/297,size.height()/420));
+        size.setHeight(size.height() / std::min(size.width()/297,size.height()/420));
+    }
+    return size;
 }
