@@ -30,6 +30,7 @@ void generatePdf(QString directory)
         html+="<div align=left>""<b>""Название прецедента:</b> "+str+"</div>";
         QJsonValue jsvalue = root.value(str);
         QStringList keys=jsvalue.toObject().keys();
+
         if (!keys.empty())
         {
             QSizeF picture_size;
@@ -74,8 +75,12 @@ void generatePdf(QString directory)
         }
     }
     json.close();
+    QSizeF picture_size;
+    picture_size=get_image_size(directory+"/classes/classes.png");
     html+="<h2 align=center>Диаграмма классов</h2>";
-    html+="<div align=left><img src='"+directory+"/classes/classes.png'></div>";
+    html+="<div align=left><img src='"+directory+"/classes/classes.png' alt='отсутствует диаграмма классов' "+
+            " width="+QString::number(picture_size.width())+
+            " height="+QString::number(picture_size.height())+"></div>";
     QTextDocument document;
     document.setHtml(html);
     QPrinter printer(QPrinter::PrinterResolution);
@@ -92,19 +97,18 @@ void generatePdf(QString directory)
 QSizeF get_image_size(QString picture_path)
 {
     QPixmap picture (picture_path);
-    QSizeF size(picture.width(),picture.height());\
-    if (size.width()/297==1.0 && size.height()/420==1.0)
+    QSizeF size(picture.width(),picture.height());
+    if (size.width()/650==1.0 && size.height()/1300==1.0)
+    { }
+    else if (size.width()/650<1 || size.height()/1300<1)
     {
+        size.setWidth(size.width() / std::max(size.width()/650, size.height()/1300));
+        size.setHeight(size.height() / std::max(size.width()/650, size.height()/1300));
     }
-    else if (size.width()/297<1 || size.height()/420<1)
+    else if (size.width()/650>1 || size.height()/1300>1)
     {
-        size.setWidth(size.width() * std::min(size.width()/297,size.height()/420));
-        size.setHeight(size.height() * std::min(size.width()/297,size.height()/420));
-    }
-    else if (size.width()/297>1 || size.height()/420>1)
-    {
-        size.setWidth(size.width() / std::min(size.width()/297,size.height()/420));
-        size.setHeight(size.height() / std::min(size.width()/297,size.height()/420));
+        size.setWidth(size.width() * std::min(size.width()/650, size.height()/1300));
+        size.setHeight(size.height() * std::min(size.width()/650, size.height()/1300));
     }
     return size;
 }
