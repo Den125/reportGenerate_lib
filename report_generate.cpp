@@ -36,7 +36,7 @@ void generatePdf(QString directory)
             QSizeF picture_size;
             html+="<div align=left>""<b>""Действуюущее лицо:</b> "+jsvalue.toObject().value("active_face").toString()+"</div>";
             html+="<div align=left>""<b>""Цель:</b> "+jsvalue.toObject().value("goal").toString()+"</div>";
-            html+="<div align=left>""<b>""Предусловие:</b> "+jsvalue.toObject().value("uslovie").toString()+"</div>";
+            html+="<div align=left>""<b>""Предусловие:</b> "+jsvalue.toObject().value("precondition").toString()+"</div>";
             picture_size=get_image_size(directory+"/robustness/"+str+".png");
             html+="<div align=left>""<img src="+directory+"/robustness/"+str+".png alt='отсутствует диаграмма для "+str+
                     "'width="+QString::number(picture_size.width())+
@@ -53,7 +53,7 @@ void generatePdf(QString directory)
                 }
                 else if (seq_list.toObject().value("type_seq").toString()=="alt")
                 {
-                    html+="<div align=left>""<b>""Альтернативная последовательность</b> ( "+seq_list.toObject().value("usl_seq").toString()+"):";
+                    html+="<div align=left>""<b>""Альтернативная последовательность</b> ( "+seq_list.toObject().value("condition_seq").toString()+"):";
                     name="_alt"+QString::number(index_seq);
                 }
                 html+="<div align=left>""<ol>";
